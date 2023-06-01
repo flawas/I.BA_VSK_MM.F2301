@@ -1,0 +1,43 @@
+#
+# Copyright 2023 Roland Gisler, HSLU Informatik, Switzerland
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+default:
+    image: maven:3.9.0-eclipse-temurin-17
+
+variables:
+    MAVEN_CLI_OPTS: "-s .mvn/settings.xml --batch-mode"
+    MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+
+cache:
+    paths:
+        - .m2/repository/
+        - target/
+
+stages:
+    - build
+    - deploy
+
+build:
+    stage: build
+    script:
+        - mvn $MAVEN_CLI_OPTS clean install $MAVEN_OPTS
+
+site:
+    stage: deploy
+    script:
+        - mvn $MAVEN_CLI_OPTS site $MAVEN_OPTS
+    artifacts:
+        paths:
+            - target/site/**

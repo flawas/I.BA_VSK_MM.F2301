@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<!--
+  -- Copyright 2022 Hochschule Luzern - Informatik.
+  --
+  -- Licensed under the Apache License, Version 2.0 (the "License");
+  -- you may not use this file except in compliance with the License.
+  -- You may obtain a copy of the License at
+  --
+  --     http://www.apache.org/licenses/LICENSE-2.0
+  --
+  -- Unless required by applicable law or agreed to in writing, software
+  -- distributed under the License is distributed on an "AS IS" BASIS,
+  -- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  -- See the License for the specific language governing permissions and
+  -- limitations under the License.
+  -->
+
+<html>
+
+<head>
+    <title>LoggerViewer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="icon" type="image/png" sizes="16x16"  href="favicon.png">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif}
+    </style>
+    <script>
+        let socket = null; // stores reference to websocket
+        let username = null;
+        let connected = false;
+        let counter = 0;
+
+        function login() {
+            if(validate()) {
+                // Create URL Parameter
+                const server = document.getElementById("server").value;
+                const port = document.getElementById("port").value;
+                const URL = "ws://" + server + ":" + port + "/viewer";
+
+                socket = new WebSocket(URL); // initiate connection
+                socket.onerror = error; // called when there is a communication error
+                socket.onopen = ready; // called when connection is established
+                socket.onmessage = receive;  // called when a message is incoming
+
+                document.getElementById('username').disabled = true;
+                document.getElementById('login').disabled = true;
+                document.getElementById('logout').disabled = false;
+                document.getElementById('output').disabled = true;
+                document.getElementById('server').disabled = true;
+                document.getElementById('port').disabled = true;
+                document.getElementById('clear').disabled = false;
+                document.getElementById('reset').disabled = false;
+                counter = 0;
+                document.getElementById('counter').innerHTML = counter;
+                connected = true;
+                checkConnection();
+            }
+        }
+
+        function logout() {
+            socket.send("LoggerViewer " + document.getElementById('username').value + " has disconnected.");
+            socket.close();
+            connected = false;
+            document.getElementById('server').disabled = false;
+            document.getElementById('port').disabled = false;
+            document.getElementById('username').disabled = false;
+            document.getElementById('login').disabled = false;
+            document.getElementById('logout').disabled = true;
+            document.getElementById('clear').disabled = true;
+            document.getElementById('reset').disabled = false;
+            counter = 0;
+            clearLog();
+        }
+
+        function reset() {
+            document.getElementById('login').disabled = false;
+            document.getElementById('username').disabled = false;
+            document.getElementById('logout').disabled = true;
+            document.getElementById('server').disabled = false;
+            document.getElementById('port').disabled = false;
+            document.getElementById('username').value = '';
+            document.getElementById('server').value = '';
+            document.getElementById('port').value = '7778';
+            document.getElementById('reset').disabled = true;
+            document.getElementById('clear').disabled = true;
+
+            if(connected === true) {
+                socket.send("LoggerViewer " + document.getElementById('username').value + " has reset the connection.");
+                socket.close();
+                connected = false;
+                messageBox('warning', 'Reset', 'Socket has been closed and parameters had been reset');
+            } else {
+                messageBox('info', 'Reset', 'Parameters had been reset!');
+            }
+            counter = 0;
+            clearLog();
+        }
+
+        function error() {
+            messageBox('error', 'Oops...', 'No connection to server!');
+            socket.close();
+            document.getElementById('logout').disabled = true;
+            document.getElementById('login').disabled = false;
+            document.getElementById('clear').disabled = true;
+            document.getElementById('reset').disabled = false;
+            document.getElementById('server').disabled = false;
+            document.getElementById('port').disabled = false;
+            document.getElementById('username').disabled = false;
+            connected = false;
+        }
+
+        function ready(event) {
+            socket.send("LoggerViewer " + document.getElementById('username').value + " is connected.");
+            messageBox('success', 'Connected', 'You are connected to the server');
+        }
+
+        function receive(event) {
+            const message = event.data;
+            const textarea = document.getElementById("output")
+            textarea.value += message + '\n';
+            textarea.scrollTop = textarea.scrollHeight;
+            document.getElementById('clear').disabled = false;
+            counter++;
+            document.getElementById('counter').innerHTML = counter;
+        }
+
+        function clearLog() {
+            document.getElementById('output').value = '';
+            document.getElementById('clear').disabled = true;
+            counter = 0;
+            document.getElementById('counter').innerHTML = counter;
+        }
+
+        function messageBox(icon, title, text) {
+            Swal.fire({
+                icon: icon,
+                title: title,
+                text: text,
+            })
+        }
+
+        function validate() {
+            // Fields
+            let server = document.getElementById('server');
+            let port = document.getElementById('port');
+            let username = document.getElementById('username');
+
+            // Validate Input
+            if(server.value === '') {
+                document.getElementById('server').setAttribute("class", "w3-input w3-border w3-border-red w3-pale-red");
+                return false;
+            }
+
+            if(server.value !== '') {
+                document.getElementById('server').setAttribute("class", "w3-input");
+            }
+
+            if(port.value === '') {
+                document.getElementById('port').setAttribute("class", "w3-input w3-border w3-border-red w3-pale-red");
+                return false;
+            }
+
+            if(port.value !== '') {
+                document.getElementById('port').setAttribute("class", "w3-input");
+            }
+
+            if(username.value === '') {
+                document.getElementById('username').setAttribute("class", "w3-input w3-border w3-border-red w3-pale-red");
+                return false;
+            }
+
+            if(username.value !== '') {
+                document.getElementById('username').setAttribute("class", "w3-input");
+            }
+            document.getElementById('reset').disabled = false;
+            return true;
+        }
+
+        async function checkConnection() {
+            while (socket.readyState !== WebSocket.CLOSED) {
+                await sleep(1000);
+
+                if (socket.readyState === WebSocket.CLOSED && connected === true) {
+                    connected = false;
+                    document.getElementById('login').disabled = false;
+                    document.getElementById('username').disabled = false;
+                    document.getElementById('logout').disabled = true;
+                    document.getElementById('server').disabled = false;
+                    document.getElementById('port').disabled = false;
+                    document.getElementById('reset').disabled = true;
+                    document.getElementById('clear').disabled = true;
+                    document.getElementById('counter').innerHTML = counter;
+                    messageBox('error', 'Lost connection', 'The websocket connection has been terminated');
+                    clearLog();
+                }
+            }
+
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</head>
+<body class="w3-light-grey">
+
+<!-- Page Container -->
+<div class="w3-content w3-margin-top" style="max-width:1400px;">
+
+    <!-- The Grid -->
+    <div class="w3-row-padding">
+
+        <!-- Left Column -->
+        <div class="w3-third">
+
+            <div class="w3-white w3-text-grey w3-card-4">
+                <div class="w3-container">
+                    <h2 class="w3-text-grey w3-padding-16"><i id="connectionIcon" class="fa fa-plug fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i>Connection</h2>
+                    <div class="w3-small">
+                        <label for="server">LoggerServer IP:</label>
+                        <input class="w3-input" id="server">
+                    </div>
+
+                    <div class="w3-small">
+                        <label for="port">LoggerServer Port:</label>
+                        <input class="w3-input" id="port" max="65535" value="7778">
+                    </div>
+
+                    <div class="w3-small">
+                        <label for="username">LoggerViewerName:</label>
+                        <input class="w3-input" id="username" size="20">
+                    </div>
+                    <br>
+                    <button class="w3-btn w3-grey" id="login" onclick="login()">Login</button>
+                    <button class="w3-btn w3-grey" id="logout" onclick="logout()" disabled>Logout</button>
+                    <button class="w3-btn w3-grey" id="clear" onclick="clearLog()" disabled>Clear Log</button>
+                    <button class="w3-btn w3-grey" id="reset" onclick="reset()" disabled>Reset</button>
+                    <br>
+                    <br>
+                </div>
+            </div>
+
+            <!-- End Left Column -->
+        </div>
+
+        <!-- Right Column -->
+        <div class="w3-twothird">
+            <div class="w3-container w3-card w3-white">
+                <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-comments fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i>LogView</h2>
+                <p>MessageClount <span class="w3-badge w3-green" id="counter">0</span></p>
+                <section>
+                    <textarea id="output" disabled rows="23" cols="110"></textarea>
+                </section>
+            </div>
+
+            <!-- End Right Column -->
+        </div>
+        <!-- End Grid -->
+    </div>
+
+    <!-- End Page Container -->
+</div>
+
+<footer class="w3-container w3-teal w3-center w3-margin-top">
+    <p>Copyright G02 Logger-Team</p>
+    <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+</footer>
+
+</body>
+</html>
+
