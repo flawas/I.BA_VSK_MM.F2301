@@ -5,7 +5,4 @@
 * [DemoApp](g02-demoapp/README.md)
 * [Logger](g02-logger/README.md)
 * [StringPersistor](g02-stringpersistor/README.md)
-
-## Group 1
-
-* [📕 Theorie](group-1/theorie.md)
+* [Clean Code](clean-code.md)
