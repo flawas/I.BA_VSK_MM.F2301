@@ -41,3 +41,7 @@ int timeoutMilliseconds = 100;
 ```
 
 \-> besser Namensgebung erspart uns viele Kommentare, aber gute Namensgebung ist anspruchsvoll.&#x20;
+
+## Iteration über sieben Grade
+
+Jeder einzelne Grad fokussiert auf eine relativ kleine, überschaubare ausgewählte Menge von Prinzipien und Praktiken.&#x20;
