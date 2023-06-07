@@ -6,3 +6,7 @@ Dies ist das Archiv-Repository vom Modul VSK im FS23 an der HSLU Luzern. Es wurd
 
 [clean-code-jugs-talk.md](clean-code-jugs-talk.md "mention")
 
+[clean-code-funktionen.md](clean-code-funktionen.md "mention")
+
+[clean-code-unit-tests.md](clean-code-unit-tests.md "mention")
+
