@@ -45,3 +45,5 @@ int timeoutMilliseconds = 100;
 ## Iteration über sieben Grade
 
 Jeder einzelne Grad fokussiert auf eine relativ kleine, überschaubare ausgewählte Menge von Prinzipien und Praktiken.&#x20;
+
+### Der erste Grad - schwarz
