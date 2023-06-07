@@ -128,20 +128,105 @@ Faktisch bedeutet das eine 100%-ige Testabdeckung. Das ist aber nicht überall e
 
 </details>
 
-T1: Unzureichende Tests.
+<details>
 
-T2: Coverage-Werkzeug verwenden.&#x20;
+<summary>T2: Coverage-Werkzeug verwenden. </summary>
 
-T3: Triviale Tests nicht überspringen.&#x20;
+Coverage-Werkzeuge decken Lücken in den Tests auf. Statement- und Decision-Coverage beachten!
 
-T4: Ignorierte Tests zeigen Mehrdeutigkeit auf.&#x20;
+<img src=".gitbook/assets/screenshot0.png" alt="" data-size="original">
 
-T5: Grenzbedingungen testen.&#x20;
+</details>
 
-T6: Bei Fehlern die Nachbarschaft gründliche testen.
+<details>
 
-T7: Muster des Scheiterns zur Diagnose nutzen.&#x20;
+<summary>T3: Triviale Tests nicht überspringen.</summary>
 
-T8: Hinweise durch Coverage Patterns beachten.&#x20;
+Manchmal gibt es Tests, die man nicht macht, weil man der Meinung ist, sie seien zu trivial (Setter- / Getter). Clean Code Dokumentarischer Wert der Testfälle übersteigt die Produktionskosten -> es lohnt sich doch! Die Abdeckung wird vergrössert und es ist ein Motivationsfaktor, weil sie sind einfach zu schreiben.&#x20;
 
-T9: Tests sollen schnell sein
+_Keine Klasse, keine Funktion ist zu klein, um nicht automatisch getestet zu sein!_
+
+</details>
+
+<details>
+
+<summary>T4: Ignorierte Tests zeigen Mehrdeutigkeit auf. </summary>
+
+Test auskommentiert oder (besser) deaktiviert:
+
+```java
+@Disabled("Gibt es eigentlich einen Nullpunkt?")
+@Test
+void testGetQuadrantNullpunkt() {
+    assertEquals(0, Geometrie.getQuadrant(0, 0));
+}
+```
+
+Wenn ein Testfall deaktiviert ist, deutet das häufig auf eine Unklarheit in den Anforderungen hin. Deaktivierte Testfälle sind somit ein Warnsignal! Temporär ok, aber nie als Providurium.&#x20;
+
+</details>
+
+<details>
+
+<summary>T5: Grenzbedingungen testen. </summary>
+
+Testen mit Grenzwerten ist wichtig! Meist wird «die Mitte» eines Algorithmus richtig implementiert, aber seine Grenzen falsch beurteilt.
+
+```java
+public long addition(int sum1, int sum2) {
+    long result = (long) sum1 + sum2;
+    System.out.println("Addition ergibt: " + result);
+    return result;
+}
+```
+
+```java
+assertEquals(2 * Integer.MAX_VALUE,
+t.addition(Integer.MAX_VALUE, Integer.MAX_VALUE));
+```
+
+Konsolenausgabe: `Addition ergibt: 4294967294`
+
+</details>
+
+<details>
+
+<summary>T6: Bei Fehlern die Nachbarschaft gründliche testen.</summary>
+
+Fehler treten oftmals gehäuft auf. Findet man in einer Klasse / Funktion einen Fehler sollte man diesen erschöpfend testen. Es besteht eine hohe Wahrscheinlichkeit, dass darin noch weitere Fehler gefunden werden.&#x20;
+
+Murphy's Law sagt:&#x20;
+
+* Meist ist ein kleiner Fehler nur dazu da, dass sich dahinter ein viel grösserer Fehler verstecken kann.&#x20;
+* Findet man hingegen einen grossen Fehler, wird sich dahinter ein anderer grosser Fehler verstecken.&#x20;
+
+</details>
+
+<details>
+
+<summary>T7: Muster des Scheiterns zur Diagnose nutzen. </summary>
+
+Wenn man genügend (und mit hoher Codeabdeckung) testet, kann man in scheiternden Tests manchmal Muster erkennen!
+
+Beispiel:&#x20;
+
+* Alle Tests scheitern, bei welchen ein String eine bestimmte Länge überschreitet
+* Alle Tests scheitern, bei welchen ein bestimmtes Argument negative Werte erhält.&#x20;
+
+</details>
+
+<details>
+
+<summary>T8: Hinweise durch Coverage Patterns beachten. </summary>
+
+Wenn ein Testfall scheitert: Codeabdeckung studieren! Manchmal erkennt man aufgrund der Zeilen die (nicht) ausgeführt werden sehr schenll den Fehler.&#x20;
+
+</details>
+
+<details>
+
+<summary>T9: Tests sollen schnell sein</summary>
+
+Langsame Tests werden selten oder gar nicht ausgeführt. Ein Test, der nicht ausgeführt wird, ist nichts Wert. Unit-Tests sollten schnell sein, damit man sie immer und jederzeit ausführt. Darum sollten die Tests auch nicht zu gross sein. Man soll alles Erforderliche tun, um die Tests zu beschleunigen!
+
+</details>

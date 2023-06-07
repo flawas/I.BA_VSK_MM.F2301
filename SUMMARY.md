@@ -7,3 +7,4 @@
 * [StringPersistor](g02-stringpersistor/README.md)
 * [Clean Code: Jugs Talk](clean-code-jugs-talk.md)
 * [Clean Code: Unit Tests](clean-code-unit-tests.md)
+* [Clean Code: Funktionen](clean-code-funktionen.md)
