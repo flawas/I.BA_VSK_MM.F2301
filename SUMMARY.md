@@ -5,4 +5,4 @@
 * [DemoApp](g02-demoapp/README.md)
 * [Logger](g02-logger/README.md)
 * [StringPersistor](g02-stringpersistor/README.md)
-* [Clean Code](clean-code.md)
+* [Clean Code: Jugs Talk](clean-code-jugs-talk.md)
