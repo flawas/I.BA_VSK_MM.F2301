@@ -1,3 +1,5 @@
 # These are supported funding model platforms
-github: [flawas]
-custom: ["https://www.paypal.me/flaviowaser"]
+# repo:     flawas/.github
+# filename: FUNDING.YML
+
+github: flawas
