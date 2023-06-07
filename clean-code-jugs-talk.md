@@ -44,6 +44,49 @@ int timeoutMilliseconds = 100;
 
 \-> besser Namensgebung erspart uns viele Kommentare, aber gute Namensgebung ist anspruchsvoll.&#x20;
 
+## Namensgebung
+
+Ein richtig guter Name sollte
+
+* absolut zweckbeschreibend sein
+* Fehlinformationen vermeiden
+* Unterschiede deutlich machen
+* gut aussprechbar und gut suchbar sein
+* möglichst keine Codierungen enthalten
+
+#### Heuristik Namensgebung
+
+**N1:** Beschreibende Namen wählne
+
+**N2:** Namen passend zur Abstraktionsebene wählen
+
+**N3:** Standartnomenklatur verwenden
+
+**N4:** Eindeutige Namen verwenden
+
+**N5:** Namenlänge abhängig vom Geltungsbereich
+
+**N6:** Codierungen vermeiden
+
+**N7:** Namen sollten auch Nebeneffekte beschreiben
+
+```java
+String removeLastClosingCurlyBrace(String message) {
+    ...
+}
+```
+
+## Clean Code Developer
+
+### Was ist Clean Code Developer?
+
+Clean Code Developer ist eine wohldefinierte Auswahl von Prinuzipien und Praktiken. Basis ist ein Wertsystem:&#x20;
+
+* Evolvierbarkeit
+* Korrektheit
+* Produktionseffizienz
+* Reflexion
+
 ## Iteration über sieben Grade
 
 Jeder einzelne Grad fokussiert auf eine relativ kleine, überschaubare ausgewählte Menge von Prinzipien und Praktiken.&#x20;
@@ -135,47 +178,4 @@ Praktiken:
 ### Der siebte Grad - Weiss
 
 Der weisse Grad vereinigt alle Prinzipien und Praktiken der farbigen Grade. Eine gleichschwebende Aufmerksamkeit ist jedoch sehr schwer zu halten. Darum begint der Clean Code Developer im Gradesystem nach einiger Zeit wieder von vorne. Die zyklische Wiederholung bringt stetige Verbesserung auf der Basis von überschaubaren Schwerpunkten. CCD wird somit zur verinnerlichten Einstellung.&#x20;
-
-## Namensgebung
-
-Ein richtig guter Name sollte
-
-* absolut zweckbeschreibend sein
-* Fehlinformationen vermeiden
-* Unterschiede deutlich machen
-* gut aussprechbar und gut suchbar sein
-* möglichst keine Codierungen enthalten
-
-#### Heuristik Namensgebung
-
-**N1:** Beschreibende Namen wählne
-
-**N2:** Namen passend zur Abstraktionsebene wählen
-
-**N3:** Standartnomenklatur verwenden
-
-**N4:** Eindeutige Namen verwenden
-
-**N5:** Namenlänge abhängig vom Geltungsbereich
-
-**N6:** Codierungen vermeiden
-
-**N7:** Namen sollten auch Nebeneffekte beschreiben
-
-```java
-String removeLastClosingCurlyBrace(String message) {
-    ...
-}
-```
-
-## Clean Code Developer
-
-### Was ist Clean Code Developer?
-
-Clean Code Developer ist eine wohldefinierte Auswahl von Prinuzipien und Praktiken. Basis ist ein Wertsystem:&#x20;
-
-* Evolvierbarkeit
-* Korrektheit
-* Produktionseffizienz
-* Reflexion
 
